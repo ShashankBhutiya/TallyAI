@@ -1,0 +1,28 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": {
+      "indexes": [
+        {
+          "collectionGroup": "invoices",
+          "queryScope": "COLLECTION",
+          "fields": [
+            {
+              "fieldPath": "uploadedAt",
+              "order": "DESCENDING"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
+  }
+}
