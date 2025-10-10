@@ -140,14 +140,15 @@ class TallyClient:
                   print(item)
                   continue
                 um = item[2]
-                amt = float(self._parse_number(item[3]))
+                net_price = float(self._parse_number(item[3]))
                 net_worth = self._parse_number(item[4])
                 vat = self._parse_number(item[5])
                 gross = self._parse_number(item[6])
-                
+                amt = gross
+
                 dt = self._edu_safe_date_yyyyMMdd()
                 vno = f"INV-{i+100:03d}"
-                narration = f"{item[0]} | Qty: {qty} {um} | Rate: {amt}"
+                narration = f"{item[0]} | Qty: {qty} {um} | Rate: {net_price}"
                 guid = str(uuid.uuid4()).upper()
                 
                 messages.append(f"""

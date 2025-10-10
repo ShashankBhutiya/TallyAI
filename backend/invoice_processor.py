@@ -208,7 +208,7 @@ class InvoiceProcessor:
         )
 
         if ocr_result is None or not ocr_result.strip():
-            return False, "OCR returned no data"
+            return False, "OCR Or AI returned no data"
 
         # Parse OCR result
         templist = ocr_result.split("\n")

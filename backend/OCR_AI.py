@@ -21,7 +21,7 @@ SYSTEM_PROMPT = """
 You will get the extracted OCR text from a document like invoice and you need to return the data[in list datatype] in a structured form for relevant further processing or data entry using python. NO irrelevant context is required the response will be not read bu anny
 """
 
-def process_with_gemini(text, system_prompt = SYSTEM_PROMPT, useModel = 'gemini-2.0-flash-lite'):
+def process_with_gemini(text, system_prompt = SYSTEM_PROMPT, useModel = 'gemini-2.5-flash'):
     """
     Send text to Gemini 2.0 API for processing with a system prompt
     """
@@ -38,12 +38,13 @@ def process_with_gemini(text, system_prompt = SYSTEM_PROMPT, useModel = 'gemini-
                 "max_output_tokens": 2048,
             },
         )
+        print(response)
         return response.text
     except Exception as e:
         print(f"Error calling Gemini API: {str(e)}")
         return None
 
-def ocr_ai(image_data, system_prompt = SYSTEM_PROMPT, useModel = 'gemini-2.0-flash-lite', is_base64=False):
+def ocr_ai(image_data, system_prompt = SYSTEM_PROMPT, useModel = 'gemini-2.5-flash', is_base64=False):
     """
     Process image data from Firestore (bytes or base64 encoded) for OCR
     
@@ -59,24 +60,42 @@ def ocr_ai(image_data, system_prompt = SYSTEM_PROMPT, useModel = 'gemini-2.0-fla
             image_bytes = base64.b64decode(image_data)
         else:
             image_bytes = image_data
-        
+        # print("image_bytes",image_bytes)
+        # print("image_bytes type",type(image_bytes))
+        # print("image_data", image_data)
+        # print("image_data type",type(image_data))
         # Create a file-like object from bytes
         image_file = BytesIO(image_bytes)
-        
+        # print(image_file)
+        # print(image_file.read())
+        #Show image
+        image_file.seek(0)
+        # image = Image.open(image_file)
+        # image.show()
         # Perform OCR on the image
         image = Image.open(image_file)
-        extracted_text = pytesseract.image_to_string(image)
+        # print("image",image)
+
+        print("image type",type(image))
+        extracted_text = pytesseract.image_to_string(image, config='--psm 6')
         
         # Check if any text was extracted from the image
         if not extracted_text.strip():
             print("❌ Error: No text could be extracted from the image.")
             return None
-        
+        print(extracted_text)
         print("✅ Successfully extracted text from the image")
         print("🔍 Processing text with Gemini AI...")
         
         # Process the extracted text with Gemini
-        response = process_with_gemini(extracted_text, system_prompt, useModel)
+        response = process_with_gemini(extracted_text,
+            system_prompt=(
+                            "This is extracted OCR text i need a 2d array of with 0th index of the index(0 based) "
+                            "is item name and 1st index is quantity and 2nd is 'um'(present in the invoice), 3rd being net price, "
+                            "4th being the net_worth, 5th being vat, 6th being gross, return a '\\n' sepreated string for each item "
+                            "and '|' sepreated values, no additional context or text formatiing is required just the required "
+                        ), useModel = 'gemini-2.5-flash-lite'
+        )
         
         if response:
             print("✅ Successfully processed text with Gemini AI")
@@ -95,22 +114,8 @@ def main():
     Main function to demonstrate the OCR and AI processing workflow.
     Handles the complete pipeline from image to processed data.
     """
-    # Path to the invoice image (update this to your image path)
-    image_path = r"C:\Users\shash\Downloads\Invoice Sample\Invoice-0001.jpg"
-    
-    print(f"\n📄 Processing invoice: {image_path}")
-    print("-" * 50)
-    
-    # Process the invoice image
-    result = ocr_ai(image_path)
-    
-    print("\n" + "=" * 50)
-    if result:
-        print("🎉 Processing Complete!")
-        print("-" * 50)
-        print(result)
-    else:
-        print("❌ Processing failed. Please check the error messages above.")
+    # file : FileStorage = FileStorage()
 
+    pass
 if __name__ == "__main__":
     main()

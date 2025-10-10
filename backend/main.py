@@ -7,12 +7,11 @@ import random
 import uuid
 import json
 from datetime import datetime
-# import pytesseract
-# from PIL import Image
-# import google.generativeai as genai
+from dotenv import load_dotenv
 import logging
-# import time
-# import xml.etree.ElementTree as ET
+
+# Load environment variables from .env file
+load_dotenv()
 
 import invoice_processor as InvoiceProcessor
 import OCR_AI 
@@ -71,6 +70,7 @@ def upload_invoice():
         return jsonify({'error': 'No file part in the request'}), 400
 
     file = request.files['file']
+    
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
     # if not db or not GEMINI_API_KEY:
@@ -127,7 +127,7 @@ def upload_invoice():
         return jsonify({
             'message': 'Invoice processed successfully',
             'status': success,
-            'data': extracted_data,
+            # 'data': extracted_data,
             'message': message
              }), 200
     except Exception as e:
