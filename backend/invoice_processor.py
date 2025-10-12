@@ -15,7 +15,7 @@ class InvoiceProcessor:
     """
     
     def __init__(self, company_name: str = "A", ledger_name: str = "New Fresh Ledger",
-                 contra_ledger: str = "Cash", tally_url: str = "http://localhost:9000"):
+                 contra_ledger: str = "Purchase", tally_url: str = "http://localhost:9000"):
         """
         Initialize invoice processor
         
@@ -27,7 +27,7 @@ class InvoiceProcessor:
         """
         self.company_name = company_name
         self.ledger_name = ledger_name
-        self.contra_ledger = contra_ledger
+        self.contra_ledger = contra_ledger if ledger_name == "Purchase" else "Cash"
         self.tally_client = TallyClient(tally_url)
         self._processing = False
     

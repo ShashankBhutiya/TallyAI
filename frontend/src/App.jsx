@@ -44,7 +44,7 @@ const dashboardStyles = {
   listContainer: 'flex-1 overflow-auto',
   listItem: 'p-3 mb-2 bg-gray-100 rounded-md flex justify-between items-center hover:bg-gray-200 transition-colors cursor-pointer',
   userIdDisplay: 'bg-gray-200 text-gray-800 text-xs p-2 rounded-md font-mono mt-4 overflow-x-auto',
-  fileUploadSection: 'mt-4 flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-indigo-500 transition-colors',
+  fileUploadSection: 'mt-4 flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-indigo-500 transition-colors space-y-6',
   uploadIcon: 'text-indigo-500 text-4xl mb-2',
   uploadText: 'text-gray-600 font-medium',
   dropzone: 'w-full h-full flex items-center justify-center',
@@ -400,7 +400,7 @@ const App = () => {
                       {file ? file.name : "Drag & Drop a file or click to upload"}
                     </p>
                     <input type="file" onChange={handleFileChange} className="hidden" id="file-upload" />
-                    <label htmlFor="file-upload" className="mt-4 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors cursor-pointer">
+                    <label htmlFor="file-upload" className="mt-8 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors cursor-pointer">
                       Choose File
                     </label>
                     <button type="submit" className="mt-4 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors" disabled={processing || !file}>
