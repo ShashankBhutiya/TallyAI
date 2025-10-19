@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "chmod +x node_modules/.bin/vite && npm run build",
+    "build": "npm install && chmod +x node_modules/.bin/vite && vite build",
     "dev": "BROWSER=none vite",
     "preview": "vite preview",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
