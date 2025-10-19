@@ -1,0 +1,68 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.report/                              
+report.[0-9]*.[0-9]*.json
+
+# Environment files (keep examples)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+!.env.example
+
+# Build outputs
+dist/
+build/
+.out/
+out/
+.next/
+.nuxt/
+.svelte-kit/
+.angular/
+storybook-static/
+
+# Caches
+.cache/
+.parcel-cache/
+.vite/
+.next/cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.cache-loader/
+.tmp/
+tmp/
+coverage/
+
+# Test runners and e2e
+cypress/videos/
+cypress/screenshots/
+playwright-report/
+test-results/
+
+# Tool/Framework specifics (optional but common)
+.astro/
+.hugo_build.lock
+
+# Editors/IDEs
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Swap/lock files
+*.swp
+*.swo
