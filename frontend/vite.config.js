@@ -17,7 +17,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: '../firebase/hosting',
+    outDir: 'dist',
     emptyOutDir: true
   },
   resolve: {
