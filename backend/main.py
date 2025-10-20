@@ -17,7 +17,11 @@ import invoice_processor as InvoiceProcessor
 import OCR_AI 
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+# CORS(app)  # Enable CORS for all routes
+# from flask_cors import CORS
+CORS(app, origins="*", supports_credentials=True)
+
+
 global_counter = 0
 # Configure logging for production-grade diagnostics
 logging.basicConfig(
@@ -133,6 +137,11 @@ def upload_invoice():
     except Exception as e:
         logger.exception(f"An error occurred while processing invoice: {e}")
         return jsonify({'error': 'Internal server error'}), 500
+
+@app.route("/api/health")
+def health():
+    return {"status": "ok"}, 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

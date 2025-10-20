@@ -278,7 +278,7 @@ const App = () => {
     formData.append('file', file);
     
     try {
-      const response = await fetch('http://localhost:5000/upload-invoice', {
+      const response = await fetch('api/upload-invoice', {
         method: 'POST',
         body: formData,
       });
