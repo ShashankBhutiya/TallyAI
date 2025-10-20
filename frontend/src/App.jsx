@@ -463,10 +463,13 @@ const App = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>  
       </div>
     );
   };
+  console.log("Firebase config:", firebaseConfig);
+  console.log("Auth initialized:", !!auth);
+  console.log("DB initialized:", !!db);
 
   return (
     <div className="min-h-screen bg-gray-100 font-sans">
