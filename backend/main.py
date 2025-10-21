@@ -6,8 +6,8 @@ from datetime import datetime
 from dotenv import load_dotenv
 import logging
 import invoice_processor as InvoiceProcessor
- 
-
+import razorpay
+from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
@@ -25,6 +25,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger("ai-tally-agent")
 
+# Initialize Razorpay client
+razorpay_client = razorpay.Client(
+    auth=(os.environ.get("RAZORPAY_KEY_ID"), os.environ.get("RAZORPAY_KEY_SECRET"))
+)
 # Global environment variables
 try:
     import os, json
@@ -147,7 +151,76 @@ def upload_invoice():
 
 @app.route("/api/health")
 def health():
-    return {"status": "ok"}, 200
+    return jsonify({"status": "ok"}), 200
+
+@app.route('/create-subscription', methods=['POST'])
+def create_subscription():
+    plan_id = os.environ.get("RAZORPAY_PLAN_ID")
+    if not plan_id:
+        return jsonify({'error': 'RAZORPAY_PLAN_ID not configured'}), 500
+
+    try:
+        subscription = razorpay_client.subscription.create({
+            'plan_id': plan_id,
+            'customer_notify': 1,
+            'total_count': 12,  # Yearly plan
+        })
+        return jsonify(subscription)
+    except Exception as e:
+        logger.exception(f"An error occurred while creating subscription: {e}")
+        return jsonify({'error': 'Could not create subscription'}), 500
+
+@app.route('/')
+def index():
+    return jsonify({"message": "AI Tally Backend is running!"}), 200
+
+
+@app.route('/payment-callback', methods=['POST'])
+def payment_callback():
+    data = request.get_json()
+    razorpay_payment_id = data.get('razorpay_payment_id')
+    razorpay_subscription_id = data.get('razorpay_subscription_id')
+    razorpay_signature = data.get('razorpay_signature')
+    user_id = data.get('user_id')
+
+    params_dict = {
+        'razorpay_payment_id': razorpay_payment_id,
+        'razorpay_subscription_id': razorpay_subscription_id,
+        'razorpay_signature': razorpay_signature
+    }
+
+    try:
+        razorpay_client.utility.verify_payment_signature(params_dict)
+        # Payment successful, update user's subscription status in Firestore
+        user_ref = db.collection('users').document(user_id)
+        user_ref.update(
+            {
+                'subscription_id': razorpay_subscription_id,
+                'subscription_status': 'active'
+            }
+        )
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        logger.exception(f"An error occurred during payment verification: {e}")
+        return jsonify({'status': 'failure'}), 400
+
+@app.route('/check-subscription', methods=['POST'])
+def check_subscription():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    try:
+        user_ref = db.collection('users').document(user_id)
+        user_doc = user_ref.get()
+        if user_doc.exists:
+            user_data = user_doc.to_dict()
+            subscription_status = user_data.get('subscription_status')
+            return jsonify({'subscription_status': subscription_status})
+        else:
+            return jsonify({'subscription_status': 'not_found'})
+    except Exception as e:
+        logger.exception(f"An error occurred while checking subscription: {e}")
+        return jsonify({'error': 'Internal server error'}), 500
 
 
 if __name__ == '__main__':
