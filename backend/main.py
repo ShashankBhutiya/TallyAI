@@ -2,19 +2,14 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from google.cloud import firestore
 import os
-import requests
-import random
-import uuid
-import json
 from datetime import datetime
 from dotenv import load_dotenv
 import logging
+import invoice_processor as InvoiceProcessor
+ 
 
 # Load environment variables from .env file
 load_dotenv()
-
-import invoice_processor as InvoiceProcessor
-import OCR_AI 
 
 app = Flask(__name__)
 # CORS(app)  # Enable CORS for all routes
@@ -32,8 +27,20 @@ logger = logging.getLogger("ai-tally-agent")
 
 # Global environment variables
 try:
-    # Initialize Firestore client
-    db = firestore.Client()
+    import os, json
+    import firebase_admin
+    from firebase_admin import credentials, firestore
+
+    sa_json = os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON")
+    if sa_json:
+        sa_dict = json.loads(sa_json)
+        cred = credentials.Certificate(sa_dict)
+        firebase_admin.initialize_app(cred)
+    else:
+        # fallback to default credentials (not recommended for production)
+        firebase_admin.initialize_app()
+    db = firestore.client()
+    
     logger.info("Firestore client initialized successfully.")
 
     # # Configure Gemini API from environment variable
@@ -144,4 +151,5 @@ def health():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)

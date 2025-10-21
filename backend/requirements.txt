@@ -1,4 +1,12 @@
 # Update your requirements.txt
+Flask==2.3.2
+flask-cors==4.1.1
+google-cloud-firestore==3.12.0
+pytesseract==0.3.10
+Pillow==10.0.0
+python-dotenv==1.0.0
+google-generativeai==0.1.10
+gunicorn==21.2.0
 pip>=23.3
 setuptools>=68
 wheel>=0.41
