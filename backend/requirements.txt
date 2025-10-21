@@ -16,3 +16,7 @@ opencv-python-headless>=4.9.0
 # #Environment & production
 gunicorn==21.2.0
 python-dotenv==1.0.0
+
+razorpay
+setuptools
+
