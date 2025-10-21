@@ -43,3 +43,8 @@ backend/__pycache__/
 backend/*.pyc
 backend/.env
 backend/service-account.json
+
+
+.__pycache__
+.pyc
+frontend/*.pyc

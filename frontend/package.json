@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "npm install && chmod +x node_modules/.bin/vite && vite build",
-    "dev": "BROWSER=none vite",
+    "dev": "vite",
     "preview": "vite preview",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
